@@ -1,70 +1,67 @@
+import "styles.css";
 
-// Data Manipulation with JavaScript ; Lab 308.1.1
+const mainBmi = document.querySelector("#mainBmi");
+mainBmi.style.backgroundColor = "var(--main-bg)";
+mainBmi.innerHTML = "<h1>BMI Calculator</h1>";
+mainBmi.classList.add("container");
 
-const n1 = 10;
-const n2 = 15;
-const n3 = 20;
-const n4 = 5;
+const labelMenu = document.getElementsById("weightInput");
 
-//Add number up to 50
+const weightInput = document.getElementById("weight");
+const heightInput = document.getElementById("height");
+const resultDiv = document.getElementById("result");
+const calcbtn = document.getElementById("calcbtn");
 
-const isSum50 = (n1 + n2 + n3 + n4) == 50;
+function validateInputs() {
+  const weight = weightInput.value.trim();
+  const height = heightInput.value.trim();
+  if (weight === "" || height === "") {
+    resultDiv.textContent = "Both fileds must be filled!";
+    return false;
+  }
+  if (isNaN(weight) || isNaN(height)) {
+    resultDiv.textContent = "Must be a number only!";
+    return false;
+  }
+  resultDiv.textContent = "";
+  return true;
+}
 
-//Check number is divisible by 5
+weightInput.addEventListener("input", validateInputs);
+heightInput.addEventListener("input", validateInputs);
 
-const isDiv5 = (n1 % 5) || (n2 % 5) || (n3 % 5) ||(n4 % 5);
+calcbtn.addEventListener("click", () => {
+  if (!validateInputs()) return;
 
-console.log(`All numbers are divisible by 5 according to the provided criteria" :${isDiv5}.`);
+  const weight = parseFloat(weightInput.value);
+  const heightCm = parseFloat(heightInput.value);
 
-//Check the the first number is larger than the last one
-const isLarg = (n1 > 5 );
+  if (!weight || !heightCm || weight <= 0 || heightCm <= 0) {
+    resultDiv.textContent = "Enter positive Value!";
+    return;
+  }
 
-console.log(`The n1 is larger than the n5 according to the provided criteria" :${isLarg}.`)
+  const heightVal = heightCm / 100;
+  const bmi = weight / (heightVal * heightVal);
+  const bmiRounded = bmi.toFixed(1);
 
-// The arithmetic operation
+  let group = "";
 
-const isSub = (n1 - n2);
-
-console.log(isSub);
-
-const isMult =(isSub * n3);
-
-console.log (`The sum of the n1 and n2 multiply by n3 :${isMult}`);
-
-const remai = (isMult % n4);
-
-console.log  (`The remaining is :${remai}`);
-
-// Number larger than 25
-
-const isOver = n1 > 25 || n2 > 25 || n3 > 25 || n4 > 25;
-
-console.log (`The comparison is :${isOver}`);
-
-
-// Pratical Math
-
-const dist = 1500;
-const costPerGallon = 3;
-const bud = 175;
-
-const galOfFuel = 175 / 3;
-
-const fuelExp = 1500 / 3;
-
-const tripHrs = 1500 / 58;
-
-
-console.log("Gallon of Fuel:", galOfFuel);
-
-console.log("Fuel Expense:", fuelExp);
-
-console.log("Trip in hours:", tripHrs);   
-
-let avg = (50 + 60 + 75) / 3;
-
-console.log("Average:", avg);
-
-const names = "galOfFuel"; + "fuelExp"; + "tripHrs"; + "avg" ;
-const res = `The Result of the calcutions are, ${names}!`; 
-console.log("names");
+  if (bmi < 16) {
+    group = "Severe Thinness!";
+  }
+  if (bmi >= 17) {
+    group = "Mild Thinness!";
+  } else if (bmi < 18.5) {
+    group = "Normal Weight!";
+  } else if (bmi < 25) {
+    group = "Overweight!";
+  } else if (bmi < 30) {
+    group = "obese Class 1!";
+  } else if (bmi < 35) {
+    group = "Obese Class 2";
+  } else {
+    group = "Obese Class 3";
+  }
+  resultDiv.textContent = `Your BMI is ${bmiRounded} (${group}).`;
+});
